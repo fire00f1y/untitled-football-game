@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dhmj3445sbu34"]
+
+[ext_resource type="Script" uid="uid://cm180shvhovaq" path="res://scripts/defender.gd" id="1_5groj"]
+[ext_resource type="Texture2D" uid="uid://b7gy8vrv4kxsi" path="res://assets/textures/defender_body.png" id="2_2g18h"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2g18h"]
+radius = 14.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_j8307"]
+radius = 16.0
+
+[node name="Defender" type="CharacterBody2D" unique_id=462880802]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_5groj")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="." unique_id=117922740]
+shape = SubResource("CircleShape2D_2g18h")
+
+[node name="TackleArea" type="Area2D" parent="." unique_id=1573859595]
+collision_layer = 0
+
+[node name="CollisionShape" type="CollisionShape2D" parent="TackleArea" unique_id=2095871392]
+shape = SubResource("CircleShape2D_j8307")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1159926950]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_2g18h")

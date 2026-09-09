@@ -1,0 +1,287 @@
+[gd_scene format=3 uid="uid://curiecplxcq16"]
+
+[ext_resource type="Script" uid="uid://coq7ndpcvo0hs" path="res://scripts/main.gd" id="1_o6xl0"]
+[ext_resource type="Script" uid="uid://b0b1oii7no3dq" path="res://scripts/field.gd" id="2_tipki"]
+[ext_resource type="PackedScene" uid="uid://b7s336ujahciw" path="res://scenes/player.tscn" id="3_85g3d"]
+[ext_resource type="Texture2D" uid="uid://c3sk84byo3kkl" path="res://assets/textures/turf_tile.png" id="3_choun"]
+[ext_resource type="Script" uid="uid://bwyhy1la4nw4x" path="res://scripts/player.gd" id="4_choun"]
+[ext_resource type="Texture2D" uid="uid://uojy0pwok5fn" path="res://assets/textures/first_down_marker.png" id="4_ya4ey"]
+[ext_resource type="Script" uid="uid://sf04ydtugfjo" path="res://scripts/hud.gd" id="5_ya4ey"]
+[ext_resource type="Script" uid="uid://cyo4jp7he5274" path="res://scripts/upgrade_picker.gd" id="6_eb6dy"]
+[ext_resource type="Script" uid="uid://c471n86q35nqd" path="res://scripts/game_over.gd" id="7_trceg"]
+[ext_resource type="StyleBox" uid="uid://c2n5hhw8440h4" path="res://theme/panel_style.tres" id="8_choun"]
+[ext_resource type="PackedScene" uid="uid://bcyec54iiyf00" path="res://scenes/referee.tscn" id="11_trceg"]
+[ext_resource type="Script" uid="uid://duo1g67yi467s" path="res://scripts/referee_actor.gd" id="12_a8y0u"]
+[ext_resource type="Texture2D" uid="uid://clj4t8bd4w3do" path="res://assets/textures/referee_body.png" id="13_jkv2x"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
+radius = 16.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
+radius = 46.0
+
+[node name="Main" type="Node2D" unique_id=947163931]
+script = ExtResource("1_o6xl0")
+
+[node name="Field" type="Node2D" parent="." unique_id=1552894034]
+script = ExtResource("2_tipki")
+
+[node name="Turf" type="Sprite2D" parent="Field" unique_id=1445703924]
+z_index = -10
+texture_repeat = 2
+position = Vector2(-240, -100000)
+texture = ExtResource("3_choun")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 480, 200000)
+
+[node name="MarkerLeft" type="Sprite2D" parent="Field" unique_id=1965319731]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("4_ya4ey")
+
+[node name="MarkerRight" type="Sprite2D" parent="Field" unique_id=495756733]
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("4_ya4ey")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1493782031 instance=ExtResource("3_85g3d")]
+collision_mask = 0
+script = ExtResource("4_choun")
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Player" unique_id=1477880293]
+shape = SubResource("CircleShape2D_g2els")
+
+[node name="AttackArea" type="Area2D" parent="Player" unique_id=861534945]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape" type="CollisionShape2D" parent="Player/AttackArea" unique_id=1206826760]
+shape = SubResource("CircleShape2D_qhqgy")
+
+[node name="AttackTimer" type="Timer" parent="Player" unique_id=160036646]
+wait_time = 0.65
+autostart = true
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1820959407]
+position_smoothing_enabled = true
+position_smoothing_speed = 8.0
+
+[node name="DefenderContainer" type="Node2D" parent="." unique_id=857530306]
+
+[node name="SpawnTimer" type="Timer" parent="." unique_id=595667729]
+one_shot = true
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1115632618]
+script = ExtResource("5_ya4ey")
+
+[node name="LeftColumn" type="VBoxContainer" parent="HUD" unique_id=147796683]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 16.0
+offset_bottom = 16.0
+theme_override_constants/separation = 10
+
+[node name="Backing" type="PanelContainer" parent="HUD/LeftColumn" unique_id=107984079]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_choun")
+
+[node name="Margin" type="MarginContainer" parent="HUD/LeftColumn/Backing" unique_id=802431911]
+layout_mode = 2
+
+[node name="VBox" type="VBoxContainer" parent="HUD/LeftColumn/Backing/Margin" unique_id=1700213192]
+layout_mode = 2
+
+[node name="DownLabel" type="Label" parent="HUD/LeftColumn/Backing/Margin/VBox" unique_id=1331117958]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 22
+text = "1st & 10"
+
+[node name="SeriesLabel" type="Label" parent="HUD/LeftColumn/Backing/Margin/VBox" unique_id=1390797186]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 16
+text = "Series 1  (4 downs)"
+
+[node name="YardsLabel" type="Label" parent="HUD/LeftColumn/Backing/Margin/VBox" unique_id=1013672491]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 16
+text = "Total yards: 0"
+
+[node name="UpgradesPanel" type="PanelContainer" parent="HUD/LeftColumn" unique_id=1697446483]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_choun")
+
+[node name="UpgradesMargin" type="MarginContainer" parent="HUD/LeftColumn/UpgradesPanel" unique_id=249572982]
+layout_mode = 2
+
+[node name="UpgradesVBox" type="VBoxContainer" parent="HUD/LeftColumn/UpgradesPanel/UpgradesMargin" unique_id=2072157140]
+layout_mode = 2
+
+[node name="UpgradesTitle" type="Label" parent="HUD/LeftColumn/UpgradesPanel/UpgradesMargin/UpgradesVBox" unique_id=46279483]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 16
+text = "UPGRADES"
+
+[node name="UpgradesGrid" type="GridContainer" parent="HUD/LeftColumn/UpgradesPanel/UpgradesMargin/UpgradesVBox" unique_id=1905377997]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 2
+
+[node name="RightPanel" type="PanelContainer" parent="HUD" unique_id=1210699251]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -220.0
+offset_top = 16.0
+offset_right = -16.0
+grow_horizontal = 0
+theme_override_styles/panel = ExtResource("8_choun")
+
+[node name="RightMargin" type="MarginContainer" parent="HUD/RightPanel" unique_id=155862792]
+layout_mode = 2
+
+[node name="RightVBox" type="VBoxContainer" parent="HUD/RightPanel/RightMargin" unique_id=1200911358]
+layout_mode = 2
+
+[node name="StatsTitle" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=782473770]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 16
+text = "STATS"
+
+[node name="SpeedLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=1322049614]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Speed: 0"
+
+[node name="PowerLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=1737313641]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Power: 0"
+
+[node name="AgilityLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=2140885178]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Agility: 0"
+
+[node name="AwarenessLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=1221095973]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 15
+text = "Awareness: 0"
+
+[node name="UpgradeLayer" type="CanvasLayer" parent="." unique_id=295705267]
+script = ExtResource("6_eb6dy")
+
+[node name="Panel" type="Control" parent="UpgradeLayer" unique_id=784380717]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="UpgradeLayer/Panel" unique_id=2012606686]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.6)
+
+[node name="CenterContainer" type="CenterContainer" parent="UpgradeLayer/Panel" unique_id=116309844]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Card" type="PanelContainer" parent="UpgradeLayer/Panel/CenterContainer" unique_id=1625447052]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_choun")
+
+[node name="VBox" type="VBoxContainer" parent="UpgradeLayer/Panel/CenterContainer/Card" unique_id=1699696969]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="UpgradeLayer/Panel/CenterContainer/Card/VBox" unique_id=159602354]
+layout_mode = 2
+text = "First Down!"
+
+[node name="Buttons" type="VBoxContainer" parent="UpgradeLayer/Panel/CenterContainer/Card/VBox" unique_id=1753064354]
+layout_mode = 2
+
+[node name="GameOverLayer" type="CanvasLayer" parent="." unique_id=1987093023]
+script = ExtResource("7_trceg")
+
+[node name="Panel" type="Control" parent="GameOverLayer" unique_id=774202619]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Dim" type="ColorRect" parent="GameOverLayer/Panel" unique_id=69864056]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0, 0, 0, 0.75)
+
+[node name="CenterContainer" type="CenterContainer" parent="GameOverLayer/Panel" unique_id=798959218]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Card" type="PanelContainer" parent="GameOverLayer/Panel/CenterContainer" unique_id=2121626472]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_choun")
+
+[node name="VBox" type="VBoxContainer" parent="GameOverLayer/Panel/CenterContainer/Card" unique_id=1794970098]
+layout_mode = 2
+
+[node name="StatsLabel" type="Label" parent="GameOverLayer/Panel/CenterContainer/Card/VBox" unique_id=1627838615]
+layout_mode = 2
+text = "Turnover on downs!"
+
+[node name="RestartButton" type="Button" parent="GameOverLayer/Panel/CenterContainer/Card/VBox" unique_id=765301465]
+layout_mode = 2
+text = "Restart"
+
+[node name="RefereeSideline" type="Node2D" parent="." unique_id=252719285 instance=ExtResource("11_trceg")]
+script = ExtResource("12_a8y0u")
+
+[node name="Body" type="Sprite2D" parent="RefereeSideline" unique_id=477281405]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("13_jkv2x")
+
+[node name="RefereeField" type="Node2D" parent="." unique_id=2144343372 instance=ExtResource("11_trceg")]
+script = ExtResource("12_a8y0u")
+
+[node name="Body" type="Sprite2D" parent="RefereeField" unique_id=378938643]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("13_jkv2x")

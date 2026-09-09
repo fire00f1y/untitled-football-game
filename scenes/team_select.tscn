@@ -1,0 +1,34 @@
+[gd_scene format=3 uid="uid://d4gdoojepwmxx"]
+
+[ext_resource type="Script" uid="uid://c1vt20nt70dql" path="res://scripts/team_select.gd" id="1_cf774"]
+
+[sub_resource type="Theme" id="Theme_oqbh2"]
+
+[node name="TeamSelect" type="Control" unique_id=2062532660]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme = SubResource("Theme_oqbh2")
+script = ExtResource("1_cf774")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1698022875]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.1, 0.08, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1870763040]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer" unique_id=650879318]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CenterContainer/VBox" unique_id=2076625062]
+layout_mode = 2
+text = "Choose Your Team"
+
+[node name="Buttons" type="VBoxContainer" parent="CenterContainer/VBox" unique_id=1242921936]
+layout_mode = 2

@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://bcyec54iiyf00"]
+
+[ext_resource type="Script" uid="uid://duo1g67yi467s" path="res://scripts/referee_actor.gd" id="1_fxtnc"]
+[ext_resource type="Texture2D" uid="uid://clj4t8bd4w3do" path="res://assets/textures/referee_body.png" id="2_q5lbl"]
+
+[node name="Referee" type="Node2D" unique_id=252719285]
+script = ExtResource("1_fxtnc")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=477281405]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_q5lbl")

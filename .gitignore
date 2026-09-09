@@ -1,0 +1,27 @@
+# Godot 4+ specific ignores
+.godot/
+/android/
+
+# Imported/generated resource metadata (regenerated automatically)
+*.import
+
+# Godot mono-specific ignores
+.mono/
+data_*/
+
+# Export artifacts
+export.cfg
+export_presets.cfg
+/build/
+/dist/
+
+# Intermediate art generation outputs (source images before processing)
+assets/raw/
+
+# Debug screenshots dropped at project root during development
+screenshot_*.png
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.tmp
