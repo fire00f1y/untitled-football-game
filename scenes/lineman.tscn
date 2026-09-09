@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://lorl4u62b5of"]
 
 [ext_resource type="Script" uid="uid://cr5y5avphss3l" path="res://scripts/lineman_ally.gd" id="1_u12ei"]
-[ext_resource type="Texture2D" uid="uid://db42vqru8ksys" path="res://assets/textures/player_body.png" id="2_jwi5n"]
+[ext_resource type="Texture2D" uid="uid://c1c2qm5escnpi" path="res://assets/textures/lineman_back_crouched.png" id="2_jwi5n"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_jwi5n"]
 radius = 24.0

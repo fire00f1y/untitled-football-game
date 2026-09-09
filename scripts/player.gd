@@ -13,6 +13,7 @@ const CHARGE_RECHARGE_TIME := 3.0
 @onready var recharge_timer: Timer = $RechargeTimer
 @onready var sprint_timer: Timer = $SprintTimer
 @onready var body_sprite: Sprite2D = $Body
+@onready var football_sprite: Sprite2D = $Football
 
 var hand_scene: PackedScene = preload("res://scenes/stiff_arm_hand.tscn")
 
@@ -23,6 +24,9 @@ var sprint_speed_boost_until: float = 0.0
 var stiff_arm_charges: int = 1
 var max_stiff_arm_charges: int = 1
 
+var football_base_position: Vector2
+var football_base_rotation: float
+
 func _ready() -> void:
 	add_to_group("player")
 	sprint_timer.timeout.connect(_on_sprint_timer_timeout)
@@ -30,6 +34,8 @@ func _ready() -> void:
 	GameState.stats_changed.connect(_on_stats_changed)
 	GameState.ability_unlocked.connect(_on_ability_unlocked)
 	body_sprite.modulate = Color(0.93, 0.92, 0.88)
+	football_base_position = football_sprite.position
+	football_base_rotation = football_sprite.rotation
 	_on_stats_changed()
 	_update_sprint_timer()
 
@@ -42,8 +48,14 @@ func _physics_process(_delta: float) -> void:
 		input_dir = input_dir.normalized()
 	if input_dir.x < -0.1:
 		body_sprite.flip_h = true
+		football_sprite.flip_h = true
+		football_sprite.position.x = -football_base_position.x
+		football_sprite.rotation = -football_base_rotation
 	elif input_dir.x > 0.1:
 		body_sprite.flip_h = false
+		football_sprite.flip_h = false
+		football_sprite.position.x = football_base_position.x
+		football_sprite.rotation = football_base_rotation
 	var speed: float = GameState.stats.get("speed", 100.0)
 	if _now() < sprint_speed_boost_until:
 		speed *= 1.5

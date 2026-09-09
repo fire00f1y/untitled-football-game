@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://b7s336ujahciw"]
 
 [ext_resource type="Script" uid="uid://bwyhy1la4nw4x" path="res://scripts/player.gd" id="1_3vyb7"]
-[ext_resource type="Texture2D" uid="uid://db42vqru8ksys" path="res://assets/textures/player_body.png" id="2_g2els"]
+[ext_resource type="Texture2D" uid="uid://0oeef3tvxvkr" path="res://assets/textures/player_back_running.png" id="2_qhqgy"]
+[ext_resource type="Texture2D" uid="uid://cikya1r4hs774" path="res://assets/textures/football.png" id="3_dqkch"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
 radius = 16.0
@@ -36,7 +37,14 @@ position_smoothing_speed = 8.0
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1348326604]
 scale = Vector2(0.55, 0.55)
-texture = ExtResource("2_g2els")
+texture = ExtResource("2_qhqgy")
 
 [node name="RechargeTimer" type="Timer" parent="." unique_id=839235997]
 one_shot = true
+
+[node name="Football" type="Sprite2D" parent="." unique_id=1004927765]
+z_index = -1
+position = Vector2(14.169401, -6.1784544)
+rotation = 1.5855016
+scale = Vector2(0.3735429, 0.37354288)
+texture = ExtResource("3_dqkch")
