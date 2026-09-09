@@ -188,10 +188,45 @@
       "widgets_values": []
     },
     {
+      "id": 603,
+      "type": "InvertMask",
+      "pos": [
+        950,
+        620
+      ],
+      "size": [
+        220,
+        50
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "mask",
+          "type": "MASK",
+          "link": 504
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "links": [
+            507
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "InvertMask"
+      },
+      "widgets_values": []
+    },
+    {
       "id": 602,
       "type": "JoinImageWithAlpha",
       "pos": [
-        950,
+        1200,
         550
       ],
       "size": [
@@ -199,7 +234,7 @@
         70
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -210,7 +245,7 @@
         {
           "name": "alpha",
           "type": "MASK",
-          "link": 504
+          "link": 507
         }
       ],
       "outputs": [
@@ -239,7 +274,7 @@
         660
       ],
       "flags": {},
-      "order": 5,
+      "order": 6,
       "mode": 0,
       "inputs": [
         {
@@ -294,6 +329,14 @@
     [
       504,
       601,
+      0,
+      603,
+      0,
+      "MASK"
+    ],
+    [
+      507,
+      603,
       0,
       602,
       1,

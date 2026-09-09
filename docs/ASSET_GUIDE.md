@@ -37,22 +37,71 @@ by hand in any image editor.
 
 ## Tools
 
-- **Generation:** `mcp__comfy-mcp__generate_image(prompt)` — a local,
-  free, fast SD-based template (`z-image-turbo`) running against a local
-  ComfyUI instance. No need to touch `run_workflow`/templates/checkpoints for
-  assets this simple; the default template has done every asset in this
-  project well.
+- **Generation — preferred, for anything that needs a transparent cutout
+  (characters, props, UI):** the saved ComfyUI workflow at
+  `tools/comfy_workflows/pixel_art_transparent.json` (also installed into
+  ComfyUI's own workflow browser as **"Pixel Art (Transparent BG)"** — open
+  it directly in the ComfyUI web UI if you'd rather work by hand). It's the
+  built-in `image_z_image_turbo` text-to-image template with a background-
+  removal chain appended, so the PNG that comes out already has a real alpha
+  channel — no Godot-side flood-fill needed. See "The saved workflow" below
+  for how it's wired and how to run it.
+- **Generation — tileable textures only:** `mcp__comfy-mcp__generate_image(prompt)`,
+  the plain default template with no background removal (a tiling texture
+  has no background to remove — the whole image is the content).
 - **Fetching:** `mcp__comfy-mcp__fetch_outputs(prompt_id, out_dir)` — pull the
   generated PNG down to `assets/raw/` in this project (that folder is
   gitignored; it's scratch space for source generations, not shipped art).
 - **Processing:** `mcp__godot-mcp-pro__execute_editor_script(code)` — runs
   GDScript inside the Godot editor process, with full filesystem access via
-  `Image` and `ProjectSettings.globalize_path()`. This is where chroma-key,
-  cropping, and the nearest-neighbor resize all happen. See the reusable
-  script in Pipeline step 3.
+  `Image` and `ProjectSettings.globalize_path()`. Pixel-art downsampling and
+  cropping-to-content happen here regardless of which generation path you
+  used; the old flood-fill-to-transparency step is only needed if you
+  generated with the plain template instead of the saved workflow. See
+  Pipeline step 3.
 - **Wiring in:** the usual `godot-mcp-pro` scene tools (`add_node`,
   `update_property`, etc.) to point a `Sprite2D.texture` or a
   `StyleBoxTexture.texture` at the processed file in `assets/textures/`.
+
+## The saved workflow (`pixel_art_transparent.json`)
+
+Graph: the stock `image_z_image_turbo` subgraph (prompt/width/height/seed/
+steps/model widgets all promoted onto its one node, exactly like the base
+template) → `LoadBackgroundRemovalModel` (`birefnet.safetensors`, a real
+salient-object segmentation model, not a naive color-key — it correctly
+punches out *interior* holes too, like the gap between crossed arms or a
+helmet's eye slit, which an edge-flood-fill can't do) → `RemoveBackground` →
+`InvertMask` → `JoinImageWithAlpha` (recombines with the original color
+image) → `SaveImage`.
+
+**The `InvertMask` node is load-bearing, not decoration.** `RemoveBackground`
+documents its output as a "foreground mask," but empirically it comes out
+inverted — background opaque, subject transparent — when fed straight into
+`JoinImageWithAlpha`. This was caught by actually inspecting the output
+pixels (`Image.get_pixel(x,y).a` in Godot) after a real `run_workflow` call,
+not by reading the node's description. If you ever rebuild this chain from
+scratch, verify polarity the same way before trusting it: sample the alpha
+of a corner pixel (should end up `0.0`) and a center/subject pixel (should
+end up close to `1.0`).
+
+**Running it:**
+
+```
+run_workflow(workflow_path="tools/comfy_workflows/pixel_art_transparent.json")
+```
+
+To change the prompt (or size/seed/steps) first, use the same slot-based flow
+as any template:
+
+```
+list_workflow_slots(workflow_path=...)   # shows address "57.text" for the prompt, etc.
+set_workflow_slot(workflow_path=..., address="57.text", value="<your prompt>")
+run_workflow(workflow_path=...)
+```
+
+The output PNG (via `fetch_outputs`, same as `generate_image`) already has a
+correct alpha channel — skip the flood-fill entirely and go straight to the
+crop/resize half of Pipeline step 3.
 
 ## Pipeline
 
@@ -76,13 +125,31 @@ ways this project's generations went wrong.
 
 ### 3. Process
 
-This is the one piece of real logic in the pipeline, and it's the same for
-every non-tiling asset (character sprites, props, UI panels/buttons): resize
-down for pixelation, flood-fill the background to transparent starting from
-the image edges (so interior light-colored pixels — a white jersey stripe, a
-helmet highlight — don't get wrongly keyed out), crop to the actual content,
-resize again to the final target height. Run this via
-`execute_editor_script`:
+If you generated with the **saved workflow** (preferred — see above), the
+alpha channel is already correct and you only need the pixelation/crop half
+of this step:
+
+```gdscript
+var img := Image.load_from_file(ProjectSettings.globalize_path("res://assets/raw/<file>.png"))
+img.resize(256, 256, Image.INTERPOLATE_NEAREST)   # pixelate
+img.convert(Image.FORMAT_RGBA8)
+var used := img.get_used_rect()                    # crop to the already-transparent content
+var cropped := img.get_region(used)
+var target_h := 72                                  # see Sizing conventions
+var scale_factor: float = float(target_h) / float(cropped.get_height())
+var tw := int(round(cropped.get_width() * scale_factor))
+cropped.resize(tw, target_h, Image.INTERPOLATE_NEAREST)
+cropped.save_png(ProjectSettings.globalize_path("res://assets/textures/<name>.png"))
+_mcp_print({"used": [used.position.x, used.position.y, used.size.x, used.size.y], "final": [tw, target_h]})
+```
+
+If you generated with the **plain template** instead (only expected for
+tileables, which skip this whole step — see below), you need the full
+flood-fill version: resize down for pixelation, flood-fill the background to
+transparent starting from the image edges (so interior light-colored pixels
+— a white jersey stripe, a helmet highlight — don't get wrongly keyed out),
+crop to the actual content, resize again to the final target height. Run
+this via `execute_editor_script`:
 
 ```gdscript
 var img := Image.load_from_file(ProjectSettings.globalize_path("res://assets/raw/<file>.png"))
@@ -305,17 +372,29 @@ collision shapes so hitboxes still feel right relative to what's drawn.
   grain/noise even on a "plain dark background" request. That's why the
   flood-fill uses a threshold (sum-of-channel-diffs, not exact match) rather
   than an exact color match.
+- **`RemoveBackground`'s mask comes out inverted.** The node's own
+  description calls its output a "foreground mask," but wiring it straight
+  into `JoinImageWithAlpha` makes the *background* opaque and the *subject*
+  transparent — backwards. The saved workflow fixes this with an
+  `InvertMask` node in between; found by inspecting actual output pixel
+  alpha values after a real run, not by trusting the node description. If
+  this saved workflow is ever rebuilt from scratch, re-verify polarity the
+  same way (see "The saved workflow" above) before trusting it.
 
 ## Checklist for adding a new asset
 
 1. Write the prompt using the right formula above; explicitly exclude
    anything the model is likely to add unprompted (see quirks).
-2. `generate_image`, then `fetch_outputs(inline_images=true)` into
-   `assets/raw/` and actually look at it.
+2. Generate: `run_workflow` on `tools/comfy_workflows/pixel_art_transparent.json`
+   (set the prompt via `set_workflow_slot` first) for anything needing a
+   transparent cutout; plain `generate_image` for tileables only. Then
+   `fetch_outputs(inline_images=true)` into `assets/raw/` and actually look
+   at it.
 3. Regenerate with a more explicit prompt if it's wrong in an obvious way
    (wrong markings, wrong pose) — don't try to fix that in post.
-4. Process with the flood-fill/crop/resize script (or the no-crop version
-   for tileables), saving to `assets/textures/`.
+4. Process with the crop/resize script (workflow path), the flood-fill/crop/
+   resize script (plain-template path), or the no-crop resize-only version
+   for tileables — saving to `assets/textures/`.
 5. `reload_project`, then confirm `load()` on the new path returns non-null.
 6. Wire the texture into the relevant `Sprite2D`/`StyleBoxTexture`, matching
    the sizing conventions table.

@@ -210,6 +210,34 @@ debug `screenshot_*.png` files dropped at the project root during testing).
 Note: this folder is **not yet a git repository** — `.gitignore` has no
 effect until `git init` is run.
 
+### 12. Saved ComfyUI workflow: generation + background removal in one step
+
+Up to this point, transparency was always produced by a Godot-side
+edge-flood-fill (see `docs/ASSET_GUIDE.md`). Built and saved a proper ComfyUI
+workflow — `tools/comfy_workflows/pixel_art_transparent.json` (also copied
+into ComfyUI's own workflow browser as **"Pixel Art (Transparent BG)"**) —
+that does both generation and background removal inside ComfyUI itself:
+the stock `image_z_image_turbo` template plus `LoadBackgroundRemovalModel`
+(BiRefNet, free/local) → `RemoveBackground` → `InvertMask` → `JoinImageWithAlpha`
+→ `SaveImage`.
+
+Verified by actually running it (`run_workflow`) and inspecting output pixel
+alpha values in Godot, not by trusting node descriptions — which is exactly
+what caught a real bug: `RemoveBackground`'s output is documented as a
+"foreground mask" but comes out inverted in practice (background opaque,
+subject transparent) when fed straight into `JoinImageWithAlpha`. Fixed by
+inserting `InvertMask` between them; re-ran and confirmed corner-pixel alpha
+0.0 / subject-pixel alpha ~1.0. As a side effect this method is now strictly
+better than the flood-fill for characters with interior cutouts (a helmet's
+eye slit, the gap between crossed arms) — BiRefNet's segmentation punches
+those out correctly, where an edge-flood-fill can only ever remove
+background connected to the image border.
+
+`docs/ASSET_GUIDE.md` updated to make this workflow the preferred path for
+anything needing a transparent cutout, with the flood-fill kept as the
+documented fallback (and still the right tool for tileable textures, which
+have no background to remove in the first place).
+
 ## Current file map
 
 ```
