@@ -25,14 +25,18 @@ shape = SubResource("CircleShape2D_qhqgy")
 
 [node name="AttackTimer" type="Timer" parent="." unique_id=160036646]
 wait_time = 0.65
-autostart = true
+one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1820959407]
+zoom = Vector2(2, 2)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 
-[node name="SpinTimer" type="Timer" parent="." unique_id=1911905877]
+[node name="SprintTimer" type="Timer" parent="." unique_id=1911905877]
 
 [node name="Body" type="Sprite2D" parent="." unique_id=1348326604]
 scale = Vector2(0.55, 0.55)
 texture = ExtResource("2_g2els")
+
+[node name="RechargeTimer" type="Timer" parent="." unique_id=839235997]
+one_shot = true

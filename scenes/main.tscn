@@ -14,12 +14,6 @@
 [ext_resource type="Script" uid="uid://duo1g67yi467s" path="res://scripts/referee_actor.gd" id="12_a8y0u"]
 [ext_resource type="Texture2D" uid="uid://clj4t8bd4w3do" path="res://assets/textures/referee_body.png" id="13_jkv2x"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_g2els"]
-radius = 16.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_qhqgy"]
-radius = 46.0
-
 [node name="Main" type="Node2D" unique_id=947163931]
 script = ExtResource("1_o6xl0")
 
@@ -42,28 +36,6 @@ texture = ExtResource("4_ya4ey")
 [node name="MarkerRight" type="Sprite2D" parent="Field" unique_id=495756733]
 scale = Vector2(0.3, 0.3)
 texture = ExtResource("4_ya4ey")
-
-[node name="Player" type="CharacterBody2D" parent="." unique_id=1493782031 instance=ExtResource("3_85g3d")]
-collision_mask = 0
-script = ExtResource("4_choun")
-
-[node name="CollisionShape" type="CollisionShape2D" parent="Player" unique_id=1477880293]
-shape = SubResource("CircleShape2D_g2els")
-
-[node name="AttackArea" type="Area2D" parent="Player" unique_id=861534945]
-collision_layer = 0
-collision_mask = 2
-
-[node name="CollisionShape" type="CollisionShape2D" parent="Player/AttackArea" unique_id=1206826760]
-shape = SubResource("CircleShape2D_qhqgy")
-
-[node name="AttackTimer" type="Timer" parent="Player" unique_id=160036646]
-wait_time = 0.65
-autostart = true
-
-[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1820959407]
-position_smoothing_enabled = true
-position_smoothing_speed = 8.0
 
 [node name="DefenderContainer" type="Node2D" parent="." unique_id=857530306]
 
@@ -142,7 +114,7 @@ theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 columns = 2
 
-[node name="RightPanel" type="PanelContainer" parent="HUD" unique_id=1210699251]
+[node name="RightColumn" type="VBoxContainer" parent="HUD" unique_id=1727709771]
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -150,15 +122,19 @@ offset_left = -220.0
 offset_top = 16.0
 offset_right = -16.0
 grow_horizontal = 0
+theme_override_constants/separation = 10
+
+[node name="RightPanel" type="PanelContainer" parent="HUD/RightColumn" unique_id=1210699251]
+layout_mode = 2
 theme_override_styles/panel = ExtResource("8_choun")
 
-[node name="RightMargin" type="MarginContainer" parent="HUD/RightPanel" unique_id=155862792]
+[node name="RightMargin" type="MarginContainer" parent="HUD/RightColumn/RightPanel" unique_id=155862792]
 layout_mode = 2
 
-[node name="RightVBox" type="VBoxContainer" parent="HUD/RightPanel/RightMargin" unique_id=1200911358]
+[node name="RightVBox" type="VBoxContainer" parent="HUD/RightColumn/RightPanel/RightMargin" unique_id=1200911358]
 layout_mode = 2
 
-[node name="StatsTitle" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=782473770]
+[node name="StatsTitle" type="Label" parent="HUD/RightColumn/RightPanel/RightMargin/RightVBox" unique_id=782473770]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.85, 0.1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
@@ -167,7 +143,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 16
 text = "STATS"
 
-[node name="SpeedLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=1322049614]
+[node name="SpeedLabel" type="Label" parent="HUD/RightColumn/RightPanel/RightMargin/RightVBox" unique_id=1322049614]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
@@ -176,7 +152,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 15
 text = "Speed: 0"
 
-[node name="PowerLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=1737313641]
+[node name="PowerLabel" type="Label" parent="HUD/RightColumn/RightPanel/RightMargin/RightVBox" unique_id=1737313641]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
@@ -185,7 +161,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 15
 text = "Power: 0"
 
-[node name="AgilityLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=2140885178]
+[node name="AgilityLabel" type="Label" parent="HUD/RightColumn/RightPanel/RightMargin/RightVBox" unique_id=2140885178]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
@@ -194,7 +170,7 @@ theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 15
 text = "Agility: 0"
 
-[node name="AwarenessLabel" type="Label" parent="HUD/RightPanel/RightMargin/RightVBox" unique_id=1221095973]
+[node name="AwarenessLabel" type="Label" parent="HUD/RightColumn/RightPanel/RightMargin/RightVBox" unique_id=1221095973]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
@@ -202,6 +178,25 @@ theme_override_constants/shadow_offset_x = 2
 theme_override_constants/shadow_offset_y = 2
 theme_override_font_sizes/font_size = 15
 text = "Awareness: 0"
+
+[node name="CooldownsPanel" type="PanelContainer" parent="HUD/RightColumn" unique_id=836161342]
+layout_mode = 2
+theme_override_styles/panel = ExtResource("8_choun")
+
+[node name="CooldownsMargin" type="MarginContainer" parent="HUD/RightColumn/CooldownsPanel" unique_id=796480071]
+layout_mode = 2
+
+[node name="CooldownsVBox" type="VBoxContainer" parent="HUD/RightColumn/CooldownsPanel/CooldownsMargin" unique_id=1231579093]
+layout_mode = 2
+
+[node name="CooldownsTitle" type="Label" parent="HUD/RightColumn/CooldownsPanel/CooldownsMargin/CooldownsVBox" unique_id=237695425]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.8)
+theme_override_constants/shadow_offset_x = 2
+theme_override_constants/shadow_offset_y = 2
+theme_override_font_sizes/font_size = 16
+text = "ABILITIES"
 
 [node name="UpgradeLayer" type="CanvasLayer" parent="." unique_id=295705267]
 script = ExtResource("6_eb6dy")
@@ -285,3 +280,7 @@ script = ExtResource("12_a8y0u")
 [node name="Body" type="Sprite2D" parent="RefereeField" unique_id=378938643]
 scale = Vector2(0.5, 0.5)
 texture = ExtResource("13_jkv2x")
+
+[node name="Player" type="CharacterBody2D" parent="." unique_id=1493782031 instance=ExtResource("3_85g3d")]
+collision_mask = 0
+script = ExtResource("4_choun")

@@ -7,7 +7,9 @@ const UPGRADES := [
 	{"type": "stat", "key": "awareness", "label": "Awareness +", "amount": 15.0, "desc": "Bigger stiff-arm range."},
 	{"type": "ability", "key": "hurdle", "max_level": 5, "label": "Hurdle", "desc": "Automatically hurdle a defender instead of getting tackled. Cooldown shrinks each level."},
 	{"type": "ability", "key": "lineman", "max_level": 2, "label": "Offensive Lineman", "desc": "An escort blocker runs with you, flattening any defender that touches him."},
-	{"type": "ability", "key": "spin", "max_level": 4, "label": "Spin Move", "desc": "Periodically spin, blasting nearby defenders back and bursting your speed. Faster each level."},
+	{"type": "ability", "key": "spin", "max_level": 4, "label": "Spin Move", "desc": "Reactively spin around a defender instead of getting tackled, dropping him to the ground. Cooldown shrinks each level."},
+	{"type": "ability", "key": "sprint", "max_level": 4, "label": "Sprint", "desc": "Periodically burst to greater speed for a moment. Cooldown shrinks each level."},
+	{"type": "ability", "key": "stiff_arm_charges", "max_level": 3, "label": "Extra Stiff-Arm", "desc": "The stiff-arm can fire again right away before it needs to fully recharge."},
 ]
 
 @onready var button_container: VBoxContainer = $Panel/CenterContainer/Card/VBox/Buttons

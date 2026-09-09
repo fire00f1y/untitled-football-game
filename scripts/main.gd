@@ -19,12 +19,18 @@ func _ready() -> void:
 	_schedule_next_spawn()
 	GameState.down_failed.connect(_on_down_failed)
 	GameState.ability_unlocked.connect(_on_ability_unlocked)
-	referee_sideline.target = player
-	referee_sideline.follow_offset = Vector2(GameState.FIELD_LEFT - 36.0, -10.0)
-	referee_sideline.global_position = player.global_position + referee_sideline.follow_offset
+	referee_sideline.mode = RefereeActor.Mode.SIDELINE
+	referee_sideline.sideline_x = GameState.FIELD_LEFT - 36.0
+	referee_sideline.facing_locked = true
+	referee_sideline.locked_flip_h = true
+	referee_sideline.global_position = Vector2(referee_sideline.sideline_x, GameState.marker_world_y())
+
+	referee_field.mode = RefereeActor.Mode.FIELD_WANDER
 	referee_field.target = player
-	referee_field.follow_offset = Vector2(80.0, 55.0)
-	referee_field.global_position = player.global_position + referee_field.follow_offset
+	referee_field.behind_offset = 70.0
+	referee_field.catchup_distance = 300.0
+	referee_field.anchor_position = Vector2(0.0, player.global_position.y + referee_field.behind_offset)
+	referee_field.global_position = referee_field.anchor_position
 
 func _process(delta: float) -> void:
 	if GameState.run_active:

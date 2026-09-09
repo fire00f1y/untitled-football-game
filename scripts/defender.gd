@@ -58,6 +58,9 @@ func _on_tackle_area_body_entered(body: Node) -> void:
 		knockback_velocity = (global_position - body.global_position).normalized() * 320.0
 		staggered_time = 0.4
 	else:
+		if body.has_method("try_spin") and body.try_spin():
+			queue_free()
+			return
 		if body.has_method("try_hurdle") and body.try_hurdle():
 			knockback_velocity = (global_position - body.global_position).normalized() * 200.0
 			staggered_time = 0.5

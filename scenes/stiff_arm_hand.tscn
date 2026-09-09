@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://d1ae6voac3vpf"]
+
+[ext_resource type="Script" uid="uid://cslqeboivrp64" path="res://scripts/stiff_arm_hand.gd" id="1_ujmit"]
+[ext_resource type="Texture2D" uid="uid://cjuy6vn6r1y0v" path="res://assets/textures/stiff_arm_hand.png" id="2_ohtje"]
+
+[node name="StiffArmHand" type="Node2D" unique_id=45110691]
+script = ExtResource("1_ujmit")
+
+[node name="Body" type="Sprite2D" parent="." unique_id=1588066586]
+scale = Vector2(0.7, 0.7)
+texture = ExtResource("2_ohtje")
