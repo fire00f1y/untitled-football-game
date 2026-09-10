@@ -1,8 +1,8 @@
 {
   "id": "9ae6082b-c7f4-433c-9971-7a8f65a3ea65",
   "revision": 0,
-  "last_node_id": 603,
-  "last_link_id": 507,
+  "last_node_id": 606,
+  "last_link_id": 510,
   "nodes": [
     {
       "id": 35,
@@ -27,85 +27,44 @@
       "widgets_values": [
         "## Pixel Art Generation + Background Removal\n\nBased on the built-in Z-Image-Turbo text-to-image template, with a\nbackground-removal chain appended so the saved PNG already has a real\nalpha channel — no separate flood-fill/chroma-key pass needed.\n\nWrite prompts using the retro pixel-art formulas in this project's\n`docs/ASSET_GUIDE.md` — ending with a plain, roughly-solid dark\nbackground (the subject-isolation model works on any background, but a\nclean one gives the cleanest cutout). Tileable ground/wall textures\n(no background to remove) should still use `image_z_image_turbo`\ndirectly, not this workflow.\n\nSame model links as the base template:\n\n**text_encoders**\n\n- [qwen_3_4b.safetensors](https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors)\n\n**diffusion_models**\n\n- [z_image_turbo_bf16.safetensors](https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors)\n\n**vae**\n\n- [ae.safetensors](https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors)\n\n**Background removal model** (auto-downloads on first run if missing)\n\n- birefnet.safetensors\n"
       ],
+      "widgets_values_named": {
+        "text": "## Pixel Art Generation + Background Removal\n\nBased on the built-in Z-Image-Turbo text-to-image template, with a\nbackground-removal chain appended so the saved PNG already has a real\nalpha channel — no separate flood-fill/chroma-key pass needed.\n\nWrite prompts using the retro pixel-art formulas in this project's\n`docs/ASSET_GUIDE.md` — ending with a plain, roughly-solid dark\nbackground (the subject-isolation model works on any background, but a\nclean one gives the cleanest cutout). Tileable ground/wall textures\n(no background to remove) should still use `image_z_image_turbo`\ndirectly, not this workflow.\n\nSame model links as the base template:\n\n**text_encoders**\n\n- [qwen_3_4b.safetensors](https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors)\n\n**diffusion_models**\n\n- [z_image_turbo_bf16.safetensors](https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors)\n\n**vae**\n\n- [ae.safetensors](https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors)\n\n**Background removal model** (auto-downloads on first run if missing)\n\n- birefnet.safetensors\n"
+      },
       "color": "#222",
       "bgcolor": "#000"
     },
     {
-      "id": 57,
-      "type": "f2fdebf6-dfaf-43b6-9eb2-7f70613cfdc1",
+      "id": 9,
+      "type": "SaveImage",
       "pos": [
-        130,
-        200
+        1897.182506924128,
+        201.9140170096972
       ],
       "size": [
-        400,
-        470
+        780,
+        660
       ],
       "flags": {},
-      "order": 1,
+      "order": 7,
       "mode": 0,
       "inputs": [
         {
-          "label": "prompt",
-          "name": "text",
-          "type": "STRING",
-          "widget": {
-            "name": "text"
-          },
-          "link": null
+          "name": "images",
+          "type": "IMAGE",
+          "link": 505
         }
       ],
       "outputs": [
         {
-          "name": "IMAGE",
+          "name": "images",
           "type": "IMAGE",
-          "links": [
-            500,
-            503
-          ]
+          "links": null
         }
       ],
       "properties": {
-        "proxyWidgets": [
-          [
-            "27",
-            "text"
-          ],
-          [
-            "13",
-            "width"
-          ],
-          [
-            "13",
-            "height"
-          ],
-          [
-            "3",
-            "seed"
-          ],
-          [
-            "3",
-            "steps"
-          ],
-          [
-            "28",
-            "unet_name"
-          ],
-          [
-            "30",
-            "clip_name"
-          ],
-          [
-            "29",
-            "vae_name"
-          ],
-          [
-            "3",
-            "control_after_generate"
-          ]
-        ],
+        "Node name for S&R": "SaveImage",
         "cnr_id": "comfy-core",
-        "ver": "0.3.73",
+        "ver": "0.3.64",
         "enableTabs": false,
         "tabWidth": 65,
         "tabXOffset": 10,
@@ -114,45 +73,58 @@
         "secondTabOffset": 80,
         "secondTabWidth": 65
       },
-      "widgets_values": []
+      "widgets_values": [
+        "pixel-art-transparent"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "pixel-art-transparent"
+      }
     },
     {
-      "id": 600,
-      "type": "LoadBackgroundRemovalModel",
+      "id": 602,
+      "type": "JoinImageWithAlpha",
       "pos": [
-        600,
-        500
+        1435.3771600523316,
+        207.24360457294907
       ],
       "size": [
         280,
-        60
+        70
       ],
       "flags": {},
-      "order": 2,
+      "order": 6,
       "mode": 0,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "image",
+          "type": "IMAGE",
+          "link": 503
+        },
+        {
+          "name": "alpha",
+          "type": "MASK",
+          "link": 507
+        }
+      ],
       "outputs": [
         {
-          "name": "bg_model",
-          "type": "BACKGROUND_REMOVAL",
+          "name": "IMAGE",
+          "type": "IMAGE",
           "links": [
-            502
+            505
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "LoadBackgroundRemovalModel"
-      },
-      "widgets_values": [
-        "birefnet.safetensors"
-      ]
+        "Node name for S&R": "JoinImageWithAlpha"
+      }
     },
     {
       "id": 601,
       "type": "RemoveBackground",
       "pos": [
-        600,
-        620
+        784.1070706840941,
+        331.26634318458383
       ],
       "size": [
         280,
@@ -184,22 +156,21 @@
       ],
       "properties": {
         "Node name for S&R": "RemoveBackground"
-      },
-      "widgets_values": []
+      }
     },
     {
       "id": 603,
       "type": "InvertMask",
       "pos": [
-        950,
-        620
+        1149.2242927869613,
+        339.7079202541588
       ],
       "size": [
         220,
         50
       ],
       "flags": {},
-      "order": 4,
+      "order": 5,
       "mode": 0,
       "inputs": [
         {
@@ -219,33 +190,99 @@
       ],
       "properties": {
         "Node name for S&R": "InvertMask"
-      },
-      "widgets_values": []
+      }
     },
     {
-      "id": 602,
-      "type": "JoinImageWithAlpha",
+      "id": 600,
+      "type": "LoadBackgroundRemovalModel",
       "pos": [
-        1200,
-        550
+        264.31721476909513,
+        38.68717224214741
       ],
       "size": [
         280,
-        70
+        60
       ],
       "flags": {},
-      "order": 5,
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "bg_model",
+          "type": "BACKGROUND_REMOVAL",
+          "links": [
+            502
+          ]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadBackgroundRemovalModel"
+      },
+      "widgets_values": [
+        "birefnet.safetensors"
+      ],
+      "widgets_values_named": {
+        "bg_removal_name": "birefnet.safetensors"
+      }
+    },
+    {
+      "id": 606,
+      "type": "PreviewImage",
+      "pos": [
+        787.1976034301221,
+        481.1227686784388
+      ],
+      "size": [
+        140,
+        246
+      ],
+      "flags": {},
+      "order": 4,
       "mode": 0,
       "inputs": [
         {
-          "name": "image",
+          "name": "images",
           "type": "IMAGE",
-          "link": 503
-        },
+          "link": 510
+        }
+      ],
+      "outputs": [
         {
-          "name": "alpha",
-          "type": "MASK",
-          "link": 507
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "widgets_values_named": {}
+    },
+    {
+      "id": 57,
+      "type": "f2fdebf6-dfaf-43b6-9eb2-7f70613cfdc1",
+      "pos": [
+        130,
+        200
+      ],
+      "size": [
+        400,
+        470
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "label": "prompt",
+          "name": "text",
+          "type": "STRING",
+          "widget": {
+            "name": "text"
+          },
+          "link": null
         }
       ],
       "outputs": [
@@ -253,52 +290,60 @@
           "name": "IMAGE",
           "type": "IMAGE",
           "links": [
-            505
+            500,
+            503,
+            510
           ]
         }
       ],
       "properties": {
-        "Node name for S&R": "JoinImageWithAlpha"
-      },
-      "widgets_values": []
-    },
-    {
-      "id": 9,
-      "type": "SaveImage",
-      "pos": [
-        1300,
-        200
-      ],
-      "size": [
-        780,
-        660
-      ],
-      "flags": {},
-      "order": 6,
-      "mode": 0,
-      "inputs": [
-        {
-          "name": "images",
-          "type": "IMAGE",
-          "link": 505
-        }
-      ],
-      "outputs": [],
-      "properties": {
-        "Node name for S&R": "SaveImage",
         "cnr_id": "comfy-core",
-        "ver": "0.3.64",
+        "ver": "0.3.73",
         "enableTabs": false,
         "tabWidth": 65,
         "tabXOffset": 10,
         "hasSecondTab": false,
         "secondTabText": "Send Back",
         "secondTabOffset": 80,
-        "secondTabWidth": 65
+        "secondTabWidth": 65,
+        "proxyWidgetErrorQuarantine": [
+          {
+            "originalEntry": [
+              "3",
+              "control_after_generate"
+            ],
+            "reason": "missingSubgraphInput",
+            "attemptedAtVersion": 1
+          }
+        ],
+        "previewExposures": [
+          {
+            "name": "$$canvas-image-preview",
+            "sourceNodeId": "3",
+            "sourcePreviewName": "$$canvas-image-preview"
+          }
+        ]
       },
       "widgets_values": [
-        "pixel-art-transparent"
-      ]
+        "sprite icon of a leather rugby helmet with open face, retro 16-bit sports video game style, centered on plain dark background, flat solid colors with clear shading, crisp hard pixel edges, no blur, no gradients, no text, game asset",
+        1024,
+        1024,
+        1080825612699210,
+        8,
+        "z_image_turbo_bf16.safetensors",
+        "qwen_3_4b.safetensors",
+        "ae.safetensors"
+      ],
+      "widgets_values_named": {
+        "text": "sprite icon of a leather rugby helmet with open face, retro 16-bit sports video game style, centered on plain dark background, flat solid colors with clear shading, crisp hard pixel edges, no blur, no gradients, no text, game asset",
+        "width": 1024,
+        "height": 1024,
+        "seed": 1080825612699210,
+        "steps": 8,
+        "unet_name": "z_image_turbo_bf16.safetensors",
+        "clip_name": "qwen_3_4b.safetensors",
+        "vae_name": "ae.safetensors"
+      }
     }
   ],
   "links": [
@@ -349,6 +394,14 @@
       9,
       0,
       "IMAGE"
+    ],
+    [
+      510,
+      57,
+      0,
+      606,
+      0,
+      "IMAGE"
     ]
   ],
   "groups": [],
@@ -359,8 +412,8 @@
         "version": 1,
         "state": {
           "lastGroupId": 4,
-          "lastNodeId": 61,
-          "lastLinkId": 75,
+          "lastNodeId": 606,
+          "lastLinkId": 510,
           "lastRerouteId": 0
         },
         "revision": 0,
@@ -558,7 +611,12 @@
               "qwen_3_4b.safetensors",
               "lumina2",
               "default"
-            ]
+            ],
+            "widgets_values_named": {
+              "clip_name": "qwen_3_4b.safetensors",
+              "type": "lumina2",
+              "device": "default"
+            }
           },
           {
             "id": 29,
@@ -616,7 +674,10 @@
             },
             "widgets_values": [
               "ae.safetensors"
-            ]
+            ],
+            "widgets_values_named": {
+              "vae_name": "ae.safetensors"
+            }
           },
           {
             "id": 33,
@@ -661,8 +722,7 @@
               "secondTabText": "Send Back",
               "secondTabOffset": 80,
               "secondTabWidth": 65
-            },
-            "widgets_values": []
+            }
           },
           {
             "id": 8,
@@ -714,8 +774,7 @@
               "secondTabText": "Send Back",
               "secondTabOffset": 80,
               "secondTabWidth": 65
-            },
-            "widgets_values": []
+            }
           },
           {
             "id": 28,
@@ -774,7 +833,11 @@
             "widgets_values": [
               "z_image_turbo_bf16.safetensors",
               "default"
-            ]
+            ],
+            "widgets_values_named": {
+              "unet_name": "z_image_turbo_bf16.safetensors",
+              "weight_dtype": "default"
+            }
           },
           {
             "id": 27,
@@ -832,7 +895,10 @@
             },
             "widgets_values": [
               "pixel art sprite icon of a SUBJECT, retro 16-bit sports video game style, centered on plain dark background, flat solid colors with clear shading, crisp hard pixel edges, no blur, no gradients, no text, game asset"
-            ]
+            ],
+            "widgets_values_named": {
+              "text": "pixel art sprite icon of a SUBJECT, retro 16-bit sports video game style, centered on plain dark background, flat solid colors with clear shading, crisp hard pixel edges, no blur, no gradients, no text, game asset"
+            }
           },
           {
             "id": 13,
@@ -895,7 +961,12 @@
               1024,
               1024,
               1
-            ]
+            ],
+            "widgets_values_named": {
+              "width": 1024,
+              "height": 1024,
+              "batch_size": 1
+            }
           },
           {
             "id": 11,
@@ -944,7 +1015,10 @@
             },
             "widgets_values": [
               3
-            ]
+            ],
+            "widgets_values_named": {
+              "shift": 3
+            }
           },
           {
             "id": 3,
@@ -1035,7 +1109,16 @@
               "res_multistep",
               "simple",
               1
-            ]
+            ],
+            "widgets_values_named": {
+              "seed": 0,
+              "control_after_generate": "randomize",
+              "steps": 8,
+              "cfg": 1,
+              "sampler_name": "res_multistep",
+              "scheduler": "simple",
+              "denoise": 1
+            }
           }
         ],
         "groups": [
@@ -1049,7 +1132,6 @@
               280
             ],
             "color": "#3f789e",
-            "font_size": 24,
             "flags": {}
           },
           {
@@ -1062,7 +1144,6 @@
               970
             ],
             "color": "#3f789e",
-            "font_size": 24,
             "flags": {}
           },
           {
@@ -1075,7 +1156,6 @@
               660
             ],
             "color": "#3f789e",
-            "font_size": 24,
             "flags": {}
           }
         ],
@@ -1234,13 +1314,13 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.6731331717151416,
+      "scale": 0.8959402515528595,
       "offset": [
-        841.4738691917171,
-        312.8272327558304
+        284.76506826640843,
+        199.299597770172
       ]
     },
-    "frontendVersion": "1.42.15",
+    "frontendVersion": "1.51.10",
     "workflowRendererVersion": "LG",
     "VHS_latentpreview": false,
     "VHS_latentpreviewrate": 0,
