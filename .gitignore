@@ -25,3 +25,9 @@ screenshot_*.png
 .DS_Store
 Thumbs.db
 *.tmp
+
+# IDE files
+.idea
+.project
+.settings
+*.iml
